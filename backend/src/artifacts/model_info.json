@@ -1,0 +1,5 @@
+{
+  "stage": "tfidf",
+  "n_recipes": 14945,
+  "n_unique_ingredients": 23941
+}
