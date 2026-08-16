@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { IconPlus, IconX } from "../components/icons.jsx";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:5000";
@@ -10,7 +10,6 @@ export default function HomePage({ onResults, ingredients: externalIngredients, 
   const [error, setError] = useState(null);
   const inputRef = useRef(null);
 
-  // Sync with external state if provided by parent, otherwise use local state
   const ingredients = externalIngredients !== undefined ? externalIngredients : localIngredients;
   const setIngredients = setExternalIngredients || setLocalIngredients;
 
@@ -68,12 +67,10 @@ export default function HomePage({ onResults, ingredients: externalIngredients, 
   return (
     <div className="home-page-container fade-in">
       <div className="home-search-wrapper">
-        {/* Brand Header */}
         <div className="brand-logo-section">
           <h1 className="brand-logo-text">Pantry2Plate</h1>
         </div>
 
-        {/* Dynamic Ingredient Tags Display */}
         {ingredients.length > 0 && (
           <div className="pantry-chips-container">
             {ingredients.map((ing) => (
@@ -92,7 +89,6 @@ export default function HomePage({ onResults, ingredients: externalIngredients, 
           </div>
         )}
 
-        {/* Pill Input Row */}
         <div className="pill-input-row">
           <input
             ref={inputRef}
@@ -115,7 +111,6 @@ export default function HomePage({ onResults, ingredients: externalIngredients, 
           </button>
         </div>
 
-        {/* Main Search Action Button */}
         <button
           type="button"
           className="btn-find-recipes"
@@ -132,7 +127,6 @@ export default function HomePage({ onResults, ingredients: externalIngredients, 
           )}
         </button>
 
-        {/* Error Message */}
         {error && (
           <div className="pantry-error-banner">
             <span>{error}</span>

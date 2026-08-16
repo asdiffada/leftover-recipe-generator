@@ -33,7 +33,6 @@ export default function MainLayout({
           : "sidebar-collapsed"
       }`}
     >
-      {/* Collapsible Sidebar Component */}
       {!hideSidebar && (
         <Sidebar
           isOpen={isSidebarOpen}
@@ -45,7 +44,6 @@ export default function MainLayout({
         />
       )}
 
-      {/* Main Content Area - Fully interactive at all times */}
       <div className="layout-content-container">{children}</div>
     </div>
   );

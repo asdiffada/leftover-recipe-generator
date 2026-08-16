@@ -15,9 +15,7 @@ export default function Sidebar({
       className={`pantry-sidebar ${isOpen ? "open" : "collapsed"}`}
       aria-label="Sidebar navigation"
     >
-      {/* Top Nav Section */}
       <div className="sidebar-top-section">
-        {/* Row 1: Hamburger Icon + Red Logo Text */}
         <div className="sidebar-nav-row">
           <button
             className="sidebar-icon-btn"
@@ -32,7 +30,6 @@ export default function Sidebar({
           </span>
         </div>
 
-        {/* Row 2: Full-width New Chat Button */}
         <button
           className="sidebar-new-chat-btn"
           onClick={onNewChat}
@@ -46,7 +43,6 @@ export default function Sidebar({
         </button>
       </div>
 
-      {/* History Section (only shown when recent search items exist) */}
       {displayHistory.length > 0 && (
         <div className="sidebar-history-section">
           <h2 className="history-title">Recent</h2>

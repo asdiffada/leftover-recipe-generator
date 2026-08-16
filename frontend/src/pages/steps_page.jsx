@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import { IconArrowLeft, IconAlertCircle, IconUtensils } from "../components/icons.jsx";
+import { IconArrowLeft, IconAlertCircle } from "../components/icons.jsx";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-/**
- * Helper to parse ingredients into a clean array of strings
- */
 export function parseIngredientsData(raw) {
   if (!raw) return [];
   if (Array.isArray(raw)) return raw;
@@ -22,9 +19,6 @@ export function parseIngredientsData(raw) {
     .filter((s) => s.length > 0);
 }
 
-/**
- * Helper to parse raw step text into structured step objects with title & instruction
- */
 export function parseStepsData(raw) {
   if (!raw) return [];
   let rawList = [];
@@ -45,7 +39,6 @@ export function parseStepsData(raw) {
     .filter((s) => s.length > 0);
 
   return cleaned.map((stepText, idx) => {
-    // Check if step text starts with a headline/title followed by ':' or ' - '
     const colonIdx = stepText.indexOf(":");
     if (colonIdx > 0 && colonIdx < 35) {
       return {
@@ -62,7 +55,6 @@ export function parseStepsData(raw) {
         instruction: stepText.substring(dashIdx + 3).trim(),
       };
     }
-    // No explicit headline title -> set title to null so only badge is shown
     return {
       stepNumber: idx + 1,
       title: null,
@@ -71,9 +63,6 @@ export function parseStepsData(raw) {
   });
 }
 
-/**
- * Reusable Step Card Component
- */
 export function StepCard({ stepNumber, title, instruction }) {
   return (
     <div className="pantry-step-card fade-in-up">
@@ -86,9 +75,6 @@ export function StepCard({ stepNumber, title, instruction }) {
   );
 }
 
-/**
- * Skeleton Loader for Steps Page
- */
 export function StepsPageSkeleton() {
   return (
     <div className="pantry-steps-page-container fade-in">
@@ -124,7 +110,6 @@ export default function StepsPage({ recipe, recipeId, onBack }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // If recipe object is passed via props, use it
     if (recipe) {
       setRecipeData(recipe);
       setLoading(false);
@@ -132,7 +117,6 @@ export default function StepsPage({ recipe, recipeId, onBack }) {
       return;
     }
 
-    // Otherwise, fetch from backend if recipeId is present
     if (recipeId !== undefined && recipeId !== null) {
       setLoading(true);
       setError(null);
@@ -203,7 +187,6 @@ export default function StepsPage({ recipe, recipeId, onBack }) {
 
   return (
     <div className="pantry-steps-page-container fade-in-up">
-      {/* Top Header: Back Arrow + Recipe Title */}
       <header className="pantry-detail-header">
         <button
           type="button"
@@ -217,7 +200,6 @@ export default function StepsPage({ recipe, recipeId, onBack }) {
         <h1 className="pantry-detail-header-title">{recipeData.title}</h1>
       </header>
 
-      {/* Ingredients Card */}
       <section className="pantry-detail-card pantry-ingredients-card fade-in-up">
         <h2 className="pantry-card-heading">Ingredients</h2>
         <ul className="pantry-ingredients-bullet-list">
@@ -230,7 +212,6 @@ export default function StepsPage({ recipe, recipeId, onBack }) {
         </ul>
       </section>
 
-      {/* Cooking Steps Cards List */}
       <section className="pantry-steps-cards-list">
         {stepsList.map((step) => (
           <StepCard

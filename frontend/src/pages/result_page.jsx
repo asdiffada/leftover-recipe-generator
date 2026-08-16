@@ -1,16 +1,10 @@
 import { useMemo } from "react";
 import { IconArrowRight, IconExternalLink, IconUtensils } from "../components/icons.jsx";
 
-/**
- * Reusable Tag Chip Component - Uniform styling for all tags
- */
 export function RecipeTag({ tag }) {
   return <span className="pantry-tag-chip">{tag}</span>;
 }
 
-/**
- * Reusable Match % & Progress Bar Component
- */
 export function MatchProgressBar({ score }) {
   const pct = Math.min(100, Math.max(0, Math.round((score || 0) * 100)));
 
@@ -27,14 +21,12 @@ export function MatchProgressBar({ score }) {
   );
 }
 
-// Non-ingredient tags to strictly filter out
 const FORBIDDEN_TAGS = new Set([
   "pedas", "kuah", "goreng", "tumis", "bakar", "rebus", "panggang", "saus",
   "balado", "geprek", "rica", "sambal", "soto", "sop", "sup", "gulai", "kare",
   "crispy", "manis", "asam", "spicy", "soup", "resep"
 ]);
 
-// Substantial food ingredient detectors
 const HEAVY_INGREDIENTS = [
   { key: "nasi", match: ["nasi"] },
   { key: "telur", match: ["telur", "telor"] },
@@ -54,21 +46,16 @@ const HEAVY_INGREDIENTS = [
   { key: "kentang", match: ["kentang"] },
 ];
 
-/**
- * Helper to derive tags strictly limited to heavy food ingredients (telur, udang, ayam, sapi, etc.)
- */
 export function getRecipeTags(recipe) {
   const titleLower = (recipe.title || "").toLowerCase();
   const ingLower = (recipe.ingredients || "").toLowerCase();
   const catLower = (recipe.category || "").toLowerCase().trim();
   const tags = [];
 
-  // 1. Add dataset Category if valid and non-forbidden
   if (catLower && !FORBIDDEN_TAGS.has(catLower)) {
     tags.push(catLower);
   }
 
-  // 2. Scan title and ingredients for substantial food ingredients
   for (const item of HEAVY_INGREDIENTS) {
     if (tags.includes(item.key)) continue;
     const matchesTitle = item.match.some((m) => titleLower.includes(m));
@@ -78,7 +65,6 @@ export function getRecipeTags(recipe) {
     }
   }
 
-  // 3. Filter out any forbidden non-ingredient tags
   const filteredTags = tags.filter((t) => !FORBIDDEN_TAGS.has(t));
 
   if (filteredTags.length > 0) {
@@ -87,9 +73,6 @@ export function getRecipeTags(recipe) {
   return catLower && !FORBIDDEN_TAGS.has(catLower) ? [catLower] : [];
 }
 
-/**
- * Format raw ingredient string into clean comma-separated paragraph
- */
 export function formatIngredientsText(raw) {
   if (!raw) return "";
   if (Array.isArray(raw)) return raw.join(", ");
@@ -107,9 +90,6 @@ export function formatIngredientsText(raw) {
     .join(", ");
 }
 
-/**
- * Skeleton Loader Component
- */
 export function SkeletonGrid() {
   return (
     <div className="pantry-results-grid">
@@ -139,7 +119,6 @@ export function SkeletonGrid() {
 }
 
 export default function ResultPage({ results, loading = false, onViewSteps, onBackToHome }) {
-  // Urutkan resep berdasarkan persentase match tertinggi ke terendah (92%, 88%, 85%, 78%, 70%, 60%)
   const sortedResults = useMemo(() => {
     if (!results || !Array.isArray(results)) return [];
     return [...results].sort((a, b) => (b.score || 0) - (a.score || 0));
@@ -167,13 +146,11 @@ export default function ResultPage({ results, loading = false, onViewSteps, onBa
                 className="pantry-recipe-card"
                 onClick={() => onViewSteps && onViewSteps(recipe)}
               >
-                {/* Header: Title Left, Match % Right */}
                 <div className="pantry-card-header">
                   <h2 className="pantry-card-title">{recipe.title}</h2>
                   <MatchProgressBar score={recipe.score} />
                 </div>
 
-                {/* Tags Row */}
                 <div className="pantry-card-tags">
                   <span className="pantry-card-label">Tags:</span>
                   <div className="pantry-tags-wrapper">
@@ -183,7 +160,6 @@ export default function ResultPage({ results, loading = false, onViewSteps, onBa
                   </div>
                 </div>
 
-                {/* Ingredients Row */}
                 <div className="pantry-card-ingredients">
                   <p className="pantry-ingredients-text">
                     <span className="pantry-card-label">Ingredients:</span>{" "}
@@ -191,10 +167,8 @@ export default function ResultPage({ results, loading = false, onViewSteps, onBa
                   </p>
                 </div>
 
-                {/* Horizontal Divider */}
                 <hr className="pantry-card-divider" />
 
-                {/* Footer Row: View cooking steps & Source link */}
                 <div className="pantry-card-footer">
                   <button
                     type="button"
@@ -226,7 +200,6 @@ export default function ResultPage({ results, loading = false, onViewSteps, onBa
           })}
         </div>
       ) : (
-        /* Empty State */
         <div className="pantry-empty-state-container fade-in">
           <div className="pantry-empty-card">
             <div className="pantry-empty-icon-wrapper">
@@ -252,4 +225,3 @@ export default function ResultPage({ results, loading = false, onViewSteps, onBa
     </div>
   );
 }
-

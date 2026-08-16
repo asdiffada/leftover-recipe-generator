@@ -6,8 +6,8 @@ import StepsPage from "./pages/steps_page.jsx";
 import ResultPage from "./pages/result_page.jsx";
 
 export default function App() {
-  const [page, setPage] = useState("home"); // "home" | "results" | "steps"
-  const [direction, setDirection] = useState("down"); // "down" | "up"
+  const [page, setPage] = useState("home");
+  const [direction, setDirection] = useState("down");
   const [ingredients, setIngredients] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
@@ -15,7 +15,6 @@ export default function App() {
   const [historyList, setHistoryList] = useState([]);
   const [activeHistoryId, setActiveHistoryId] = useState(null);
 
-  // Sync state with URL Hash for dynamic routing (e.g. #/recipe/:id)
   useEffect(() => {
     function handleRouteFromHash() {
       const hash = window.location.hash;
@@ -34,14 +33,12 @@ export default function App() {
     return () => window.removeEventListener("hashchange", handleRouteFromHash);
   }, [searchResults]);
 
-  // Handle successful recipe search from backend
   function handleSearchResults(results, queryIngredients = ingredients) {
     setSearchResults(results);
     setDirection("down");
     setPage("results");
     window.location.hash = "#/results";
 
-    // Dynamically append new search to history list ONLY if matching recipes exist
     if (results && Array.isArray(results) && results.length > 0) {
       const searchTitle = queryIngredients.join(", ") || "Recipe Search";
       const newHistoryItem = {
@@ -57,7 +54,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // Action: New Chat (Reset state)
   function handleNewChat() {
     setIngredients([]);
     setSearchResults(null);
@@ -70,7 +66,6 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // Action: Select History item
   function handleSelectHistory(item) {
     setActiveHistoryId(item.id);
     if (item.ingredients) {
