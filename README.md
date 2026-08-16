@@ -1,268 +1,142 @@
-# Pantry2Plate — Leftover Recipe Generator
+# Pantry2Plate
 
-> **Pantry2Plate** is an intelligent web application designed to recommend Indonesian recipes based on the leftover ingredients available in your pantry or refrigerator.
+A recipe recommendation web app that suggests Indonesian dishes based on leftover ingredients you have at home.
 
-The system combines machine learning algorithms (**TF-IDF Vectorization** and **Cosine Similarity**) with business logic (**Chef Rules Filtering**) to ensure recommended recipes are relevant, accurate, and immediately cookable without missing essential core ingredients.
+The recommendation engine uses TF-IDF and cosine similarity to rank recipes against user input, combined with rule-based filtering to ensure recipes requiring essential ingredients (like specific proteins) aren't recommended if they're missing.
 
----
+## Features
 
-## Table of Contents
-- [Key Features](#key-features)
-- [Architecture & Workflow](#architecture--workflow)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Installation & Setup](#installation--setup)
-  - [1. Prerequisites](#1-prerequisites)
-  - [2. Backend Setup (Flask API)](#2-backend-setup-flask-api)
-  - [3. Frontend Setup (React + Vite)](#3-frontend-setup-react--vite)
-- [API Documentation](#api-documentation)
-- [Model Training & Artifacts](#model-training--artifacts)
-
----
-
-## Key Features
-
-- **Dynamic Ingredient Input (Tag Chips)**: Interactively add and remove ingredients you currently have.
-- **Smart Scoring & Match Percentage**: Calculates the match percentage for each recipe relative to input ingredients, visualized with clean progress bars.
-- **Chef Rules & Protein Guard**: Prevents recommending recipes that require mandatory proteins (e.g., chicken, beef, fish, shrimp, tofu, tempeh, eggs) unless specifically provided by the user.
-- **Step-by-Step Cooking Guide**: Displays detailed ingredient quantities and structured, numbered cooking step cards.
-- **Deep Linking & Hash Routing**: Seamless navigation with URL hash routing (`#/results`, `#/recipe/:id`) and full browser history support.
-- **Search History**: Saves recent search queries within the current session for quick reference.
-- **Responsive UI**: Clean, modern interface optimized for both desktop and mobile screens.
-
----
-
-## Architecture & Workflow
-
-```
-[ User Inputs Ingredients ]
-           │
-           ▼
-[ Frontend: React + Vite ] ──( HTTP POST /recommend )──▶ [ Backend: Flask API ]
-                                                                   │
-    ┌──────────────────────────────────────────────────────────────┘
-    ▼
-[ 1. Ingredient Normalization ]
-    └─ Strips measurement units (sdm, siung, gram) and preparation descriptors (cincang, rebus).
-    └─ Canonical tokenization: "bawang merah" -> "bawang_merah".
-    │
-    ▼
-[ 2. TF-IDF & Cosine Similarity ]
-    └─ Transforms ingredient query into a TF-IDF vector.
-    └─ Computes Cosine Similarity against 14,900+ recipe vectors.
-    │
-    ▼
-[ 3. Chef Rules Filtering ]
-    └─ Checks essential core proteins (Chicken, Beef, Egg, Fish, Tofu, etc.).
-    └─ Filters out recipes containing required proteins not owned by the user.
-    │
-    ▼
-[ Return Ranked Recipe List ] ──( JSON Response )──▶ [ Frontend Displays Result Cards ]
-```
-
----
+- Ingredient input with tag chips and real-time search
+- Match percentage indicators for recipe results
+- Rule-based filtering for essential proteins (chicken, beef, fish, eggs, tofu, etc.)
+- Step-by-step cooking instructions with ingredient breakdown
+- Local search history
 
 ## Tech Stack
 
-### Frontend
-- **Framework / Library**: React 19 (JavaScript / JSX)
-- **Build Tool**: Vite 8
-- **Styling**: Vanilla CSS (CSS Variables, Flexbox/Grid, Glassmorphism, Micro-animations)
-- **Linter**: Oxlint
+- **Frontend**: React 19, Vite, Vanilla CSS
+- **Backend**: Flask, Flask-CORS
+- **ML / Data**: scikit-learn, pandas, joblib
+- **Dataset**: ~14,900 Indonesian recipes
 
-### Backend
-- **Framework**: Flask, Flask-CORS
-- **Machine Learning / Data Processing**:
-  - `scikit-learn` (TfidfVectorizer, cosine_similarity)
-  - `pandas` and `numpy`
-  - `joblib` (Model and matrix serialization)
+## Getting Started
 
-### Training & Dataset
-- **Environment**: Jupyter Notebook / Google Colab (`training/02_train_tfidf.ipynb`)
-- **Dataset**: ~14,945 Indonesian Recipes with 23,900+ unique ingredient tokens.
+### Prerequisites
 
----
+- Node.js (v18+)
+- Python (3.10+)
 
-## Project Structure
+### Backend Setup
 
-```text
-leftover-recipe-generator/
-├── README.md                      # Project documentation
-├── .gitignore
-├── backend/                       # Flask REST API service
-│   ├── main.py                    # Flask server entry point (Port 5000)
-│   ├── requirements.txt           # Python backend dependencies
-│   └── src/
-│       ├── rules.py               # Chef rules & ingredient normalization
-│       ├── controllers/
-│       │   └── recommender_controller.py # Recommender logic (model loader & inference)
-│       └── artifacts/             # Pre-trained ML artifacts
-│           ├── metadata.pkl       # Recipe metadata (Title, Ingredients, Steps, URL)
-│           ├── model_info.json    # Dataset & model statistics
-│           ├── tfidf_matrix.joblib# Precomputed TF-IDF matrix
-│           └── vectorizer.joblib  # Fitted Scikit-learn TF-IDF Vectorizer
-├── frontend/                      # React Single Page Application (Vite)
-│   ├── index.html                 # Main HTML template
-│   ├── package.json               # Frontend dependencies & scripts
-│   ├── vite.config.js             # Vite configuration
-│   ├── .env                       # Environment variables (VITE_API_BASE_URL)
-│   └── src/
-│       ├── main.jsx               # React entry point
-│       ├── App.jsx                # Main application state & router
-│       ├── App.css                # App-wide layout & styling
-│       ├── index.css              # Global styles & resets
-│       ├── main_layout.jsx        # App layout shell (Sidebar + Header + Content)
-│       ├── components/
-│       │   ├── icons.jsx          # SVG icon components
-│       │   └── sidebar.jsx        # Search history sidebar & New Search action
-│       └── pages/
-│           ├── home_page.jsx      # Ingredient input page
-│           ├── result_page.jsx    # Recommended recipes list page
-│           └── steps_page.jsx     # Recipe detail & cooking steps page
-└── training/                      # Machine learning training notebook
-    └── 02_train_tfidf.ipynb       # Data preprocessing & artifact export notebook
-```
-
----
-
-## Installation & Setup
-
-### 1. Prerequisites
-Ensure you have the following installed on your machine:
-- **Node.js** (v18.0.0 or later) & **npm**
-- **Python** (v3.10 or later) & **pip**
-- **Git**
-
----
-
-### 2. Backend Setup (Flask API)
-
-1. Open a terminal and navigate to the `backend/` directory:
+1. Go to the backend folder:
    ```bash
    cd backend
    ```
 
 2. Create and activate a virtual environment:
-   - **Windows (PowerShell):**
-     ```powershell
-     python -m venv venv
-     .\venv\Scripts\Activate.ps1
-     ```
-   - **Linux / macOS:**
-     ```bash
-     python3 -m venv venv
-     source venv/bin/activate
-     ```
+   ```bash
+   python -m venv venv
+   # Windows
+   .\venv\Scripts\activate
+   # Linux / macOS
+   source venv/bin/activate
+   ```
 
-3. Install required Python packages:
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. Ensure model artifacts are located in `backend/src/artifacts/` (`vectorizer.joblib`, `tfidf_matrix.joblib`, `metadata.pkl`).
+4. Make sure model artifacts are present in `backend/src/artifacts/` (`vectorizer.joblib`, `tfidf_matrix.joblib`, `metadata.pkl`).
 
-5. Run the Flask server:
+5. Start the Flask server:
    ```bash
    python main.py
    ```
-   The backend API will run at `http://127.0.0.1:5000` (or `http://localhost:5000`).
+   The API will run at `http://localhost:5000`.
 
----
+### Frontend Setup
 
-### 3. Frontend Setup (React + Vite)
-
-1. Open a new terminal and navigate to the `frontend/` directory:
+1. Go to the frontend folder:
    ```bash
    cd frontend
    ```
 
-2. Install Node dependencies:
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Verify your `.env` configuration points to your backend URL:
+3. Configure `.env` (optional, defaults to `http://localhost:5000`):
    ```env
    VITE_API_BASE_URL=http://localhost:5000
    ```
 
-4. Start the development server:
+4. Start the dev server:
    ```bash
    npm run dev
    ```
+   Open `http://localhost:5173` in your browser.
 
-5. Open the displayed local URL (typically `http://localhost:5173`) in your browser.
+## API Reference
 
----
+### `GET /health`
+Health check endpoint.
 
-## API Documentation
+Response:
+```json
+{
+  "status": "ok"
+}
+```
 
-### 1. Health Check
-Verifies that the backend server is online and reachable.
-- **Endpoint**: `GET /health`
-- **Response** `200 OK`:
-  ```json
-  {
-    "status": "ok"
-  }
-  ```
+### `POST /recommend`
+Get ranked recipe recommendations based on input ingredients.
 
----
+Request body:
+```json
+{
+  "ingredients": ["telur", "bawang merah", "nasi"],
+  "top_n": 20,
+  "min_score": 0.20
+}
+```
 
-### 2. Recipe Recommendation
-Retrieves ranked recipe recommendations based on input ingredients.
-- **Endpoint**: `POST /recommend`
-- **Request Body**:
-  ```json
-  {
-    "ingredients": ["telur", "bawang merah", "cabai rawit", "nasi"],
-    "top_n": 20,
-    "min_score": 0.20
-  }
-  ```
-- **Response** `200 OK`:
-  ```json
-  {
-    "query": ["telur", "bawang merah", "cabai rawit", "nasi"],
-    "results": [
-      {
-        "id": 1024,
-        "title": "Nasi Goreng Telur Sederhana",
-        "category": "Nasi",
-        "ingredients": "2 piring nasi putih--2 butir telur--3 siung bawang merah--5 buah cabai rawit--garam secukupnya",
-        "steps": "1. Haluskan bawang dan cabai.\n2. Orak-arik telur hingga matang.\n3. Masukkan nasi dan bumbu, aduk rata hingga matang.",
-        "url": "https://cookpad.com/...",
-        "score": 0.8542
-      }
-    ]
-  }
-  ```
-
----
-
-### 3. Recipe Detail by ID
-Fetches detailed recipe information for a specific recipe index.
-- **Endpoint**: `GET /recipe/<recipe_id>`
-- **Response** `200 OK`:
-  ```json
-  {
-    "recipe": {
+Response:
+```json
+{
+  "query": ["telur", "bawang merah", "nasi"],
+  "results": [
+    {
       "id": 1024,
       "title": "Nasi Goreng Telur Sederhana",
       "category": "Nasi",
-      "ingredients": "2 piring nasi putih--2 butir telur...",
-      "steps": "1. Haluskan bawang dan cabai...",
-      "url": "https://cookpad.com/..."
+      "ingredients": "2 piring nasi putih--2 butir telur--3 siung bawang merah",
+      "steps": "1. Tumis bawang.\n2. Masukkan telur dan nasi.\n3. Aduk rata.",
+      "url": "https://...",
+      "score": 0.85
     }
+  ]
+}
+```
+
+### `GET /recipe/<id>`
+Fetch details for a specific recipe by index ID.
+
+Response:
+```json
+{
+  "recipe": {
+    "id": 1024,
+    "title": "Nasi Goreng Telur Sederhana",
+    "category": "Nasi",
+    "ingredients": "2 piring nasi putih--2 butir telur--3 siung bawang merah",
+    "steps": "1. Tumis bawang.\n2. Masukkan telur dan nasi.\n3. Aduk rata.",
+    "url": "https://..."
   }
-  ```
+}
+```
 
----
+## Model Training
 
-## Model Training & Artifacts
-
-To update the recipe dataset or retrain the model:
-1. Open `training/02_train_tfidf.ipynb` in Google Colab or Jupyter Lab.
-2. Upload the raw dataset (`resep_raw.csv`).
-3. Run all cells to perform text cleaning, tokenization, TF-IDF vector fitting, and similarity matrix calculation.
-4. Download the generated artifacts (`vectorizer.joblib`, `tfidf_matrix.joblib`, `metadata.pkl`, `model_info.json`) and place them in `backend/src/artifacts/`.
+The TF-IDF model is trained in `training/02_train_tfidf.ipynb`. Running the notebook processes raw recipe data, fits the vectorizer, and exports artifacts (`vectorizer.joblib`, `tfidf_matrix.joblib`, `metadata.pkl`) to `backend/src/artifacts/`.
