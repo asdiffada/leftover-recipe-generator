@@ -73,69 +73,52 @@ The system combines machine learning algorithms with business logic to ensure re
 
 ### 1. Prerequisites
 Ensure you have the following installed on your machine:
-- **Node.js** (v18.0.0 or later) & **npm**
-- **Python** (v3.10 or later) & **pip**
+- **Node.js** & **npm**
+- **Python** & **pip**
 - **Git**
 
 ---
 
-### 2. Backend Setup (Flask API)
+### 2. Backend Setup
 
 1. Open a terminal and navigate to the `backend/` directory:
-   ```bash
    cd backend
-   ```
 
 2. Create and activate a virtual environment:
    - **Windows (PowerShell):**
-     ```powershell
      python -m venv venv
      .\venv\Scripts\Activate.ps1
-     ```
+
    - **Linux / macOS:**
-     ```bash
      python3 -m venv venv
      source venv/bin/activate
-     ```
 
 3. Install required Python packages:
-   ```bash
    pip install -r requirements.txt
-   ```
 
-4. Ensure model artifacts are located in `backend/src/artifacts/` (`vectorizer.joblib`, `tfidf_matrix.joblib`, `metadata.pkl`).
+4. Ensure model artifacts are located in `backend/src/artifacts/`.
 
 5. Run the Flask server:
-   ```bash
    python main.py
-   ```
-   The backend API will run at `http://127.0.0.1:5000` (or `http://localhost:5000`).
+   The backend API will run at `http://127.0.0.1:5000` or `http://localhost:5000`.
 
 ---
 
-### 3. Frontend Setup (React + Vite)
+### 3. Frontend Setup
 
 1. Open a new terminal and navigate to the `frontend/` directory:
-   ```bash
    cd frontend
-   ```
 
 2. Install Node dependencies:
-   ```bash
    npm install
-   ```
 
 3. Verify your `.env` configuration points to your backend URL:
-   ```env
    VITE_API_BASE_URL=http://localhost:5000
-   ```
 
 4. Start the development server:
-   ```bash
    npm run dev
-   ```
 
-5. Open the displayed local URL (typically `http://localhost:5173`) in your browser.
+5. Open the displayed local URL in your browser.
 
 ---
 
@@ -145,11 +128,10 @@ Ensure you have the following installed on your machine:
 Verifies that the backend server is online and reachable.
 - **Endpoint**: `GET /health`
 - **Response** `200 OK`:
-  ```json
+
   {
     "status": "ok"
   }
-  ```
 
 ---
 
@@ -157,15 +139,14 @@ Verifies that the backend server is online and reachable.
 Retrieves ranked recipe recommendations based on input ingredients.
 - **Endpoint**: `POST /recommend`
 - **Request Body**:
-  ```json
+
   {
     "ingredients": ["telur", "bawang merah", "cabai rawit", "nasi"],
     "top_n": 20,
     "min_score": 0.20
   }
-  ```
+
 - **Response** `200 OK`:
-  ```json
   {
     "query": ["telur", "bawang merah", "cabai rawit", "nasi"],
     "results": [
@@ -180,7 +161,6 @@ Retrieves ranked recipe recommendations based on input ingredients.
       }
     ]
   }
-  ```
 
 ---
 
@@ -188,7 +168,7 @@ Retrieves ranked recipe recommendations based on input ingredients.
 Fetches detailed recipe information for a specific recipe index.
 - **Endpoint**: `GET /recipe/<recipe_id>`
 - **Response** `200 OK`:
-  ```json
+
   {
     "recipe": {
       "id": 1024,
@@ -199,14 +179,4 @@ Fetches detailed recipe information for a specific recipe index.
       "url": "https://cookpad.com/..."
     }
   }
-  ```
 
----
-
-## Model Training & Artifacts
-
-To update the recipe dataset or retrain the model:
-1. Open `training/02_train_tfidf.ipynb` in Google Colab or Jupyter Lab.
-2. Upload the raw dataset (`resep_raw.csv`).
-3. Run all cells to perform text cleaning, tokenization, TF-IDF vector fitting, and similarity matrix calculation.
-4. Download the generated artifacts (`vectorizer.joblib`, `tfidf_matrix.joblib`, `metadata.pkl`, `model_info.json`) and place them in `backend/src/artifacts/`.
