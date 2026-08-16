@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Gluten:wght@400;600;700;800;900&family=Comfortaa:wght@700&family=Fredoka:wght@600;700&family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  /* ─── Pantry2Plate Brand & Theme Palette ─── */
+  --bg-gradient: linear-gradient(180deg, #FDE2E4 0%, #FFF0F2 35%, #FFFFFF 100%);
+  --bg: #FFF0F2;
+  --bg-card: #FFFFFF;
+  --bg-input: #FFFFFF;
+
+  --brand-red: #D80000;
+  --btn-dark: #2C2C2C;
+  --btn-dark-hover: #1A1A1A;
+
+  --text-dark: #2C241B;
+  --text-body: #4A3F35;
+  --text-muted: #8E7C6D;
+  --text-label: #4A3F35;
+
+  --accent: #FAC196;
+  --accent-hover: #E3AA7E;
+  --accent-light: #F9DDB5;
+
+  --tag-bg: #FFFFFF;
+  --tag-border: #E8E8E8;
+  --tag-text: #2C241B;
+
+  --border: #F3D5D7;
+  --border-focus: #D80000;
+
+  --shadow-card: 0 4px 20px rgba(44, 36, 27, 0.05);
+  --shadow-card-hover: 0 8px 32px rgba(44, 36, 27, 0.09);
+  --shadow-btn: 0 4px 14px rgba(44, 44, 44, 0.25);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --font-logo: 'Gluten', 'Comfortaa', 'Fredoka', cursive, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-body);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--text-dark);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+p {
+  color: var(--text-body);
+  line-height: 1.7;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-full); }
+
+/* ─── Animations ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+/* ─── Page Transitions ─── */
+@keyframes pageScrollDown {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageScrollUp {
+  0% {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition-down {
+  animation: pageScrollDown 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  width: 100%;
+}
+
+.page-transition-up {
+  animation: pageScrollUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  width: 100%;
+}
